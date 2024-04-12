@@ -15,7 +15,7 @@
         const apiKey = 'ERKiWwwk9craOxZg4nODy7K7ps51LF1a';
         const locationKey = '340850'; // Replace with the location key of your desired location
         
-        const url = `http://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${apiKey}&details=true`;
+        const url = `https://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${apiKey}&details=true`;
 
         fetch(url)
             .then(response => response.json())
