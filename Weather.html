@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hico TX Weather</title>
+</head>
+<body>
+    <h1>Hico TX Weather</h1>
+    <div id="weatherIcon"></div> <!-- Added div for weather icon -->
+    <div id="weather"></div>
+
+    <script>
+        // Replace 'YOUR_API_KEY' with your AccuWeather API key
+        const apiKey = 'ERKiWwwk9craOxZg4nODy7K7ps51LF1a';
+        const locationKey = '340850'; // Replace with the location key of your desired location
+        
+        const url = `http://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${apiKey}&details=true`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const weatherData = data[0];
+                const weatherText = weatherData.WeatherText;
+                const temperature = weatherData.Temperature.Imperial.Value;
+                const humidity = weatherData.RelativeHumidity;
+                const weatherIcon = weatherData.WeatherIcon;
+
+                // Set the source of the weather icon image
+                document.getElementById('weatherIcon').innerHTML = `<img src="https://developer.accuweather.com/sites/default/files/${weatherIcon}-s.png" alt="Weather Icon">`;
+
+                document.getElementById('weather').innerHTML = `
+                    <p>Weather: ${weatherText}</p>
+                    <p>Temperature: ${temperature}°F</p>
+                    <p>Humidity: ${humidity}%</p>
+                `;
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                document.getElementById('weather').innerHTML = '<p>Failed to fetch weather data</p>';
+            });
+    </script>
+</body>
+</html>
