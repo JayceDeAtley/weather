@@ -18,6 +18,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
+            position: relative; /* Added position relative */
         }
         h1 {
             font-size: 28px;
@@ -34,7 +35,7 @@
             width: 130px;
             height: 78px;
         }
-        #weather, #forecast {
+        #weather, #forecast, #sun-moon {
             margin-bottom: 20px;
             color: #555;
             text-align: center;
@@ -45,7 +46,6 @@
             border-radius: 5px;
             background-color: #f3f3f3;
             display: flex;
-            justify-content: space-between; /* Align items to the start and end of the container */
             align-items: center;
         }
         .forecast-item p {
@@ -63,6 +63,7 @@
         .forecast-icon {
             width: 75px;
             height: 45px;
+            margin-right: 10px;
         }
         .forecast-date {
             font-size: 12px;
@@ -70,16 +71,30 @@
         }
         .high-low-container {
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start; /* Align items to the start of the container */
         }
         .high-temp {
             font-weight: bold;
-            font-size: 25px; /* Updated size for high temperature */
-            margin-right: 5px; /* Added margin between high temperature and low temperature */
-            line-height: 25px; /* Adjust line height to vertically center */
+            font-size: 25px;
+            margin-bottom: 5px; /* Add margin between high temperature and low temperature */
+            line-height: 25px;
         }
         .low-temp {
-            font-size: 15px; /* Updated size for low temperature */
+            font-size: 15px;
+        }
+        .night-icon {
+            width: 55px; /* Adjusted width */
+            height: 25px; /* Adjusted height */
+            margin-right: 10px;
+            margin-top: auto; /* Align to the bottom */
+        }
+        .logo {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 100px; /* Adjusted width */
+            height: auto; /* Auto height to maintain aspect ratio */
         }
     </style>
 </head>
@@ -89,12 +104,15 @@
         <div id="weatherIcon"></div>
         <div id="weather"></div>
         <div id="forecast"></div>
+        <a href="https://www.accuweather.com/en/us/hico/76457/weather-forecast/340850" target="_blank">
+    <img class="logo" src="https://raw.githubusercontent.com/JayceDeAtley/weather/489beccf1e51b20481a76af7cf0c596be254e409/AW_RGB_Small_R.svg" alt="Logo"></a>    
     </div>
 
     <script>
         const apiKey1 = 'ERKiWwwk9craOxZg4nODy7K7ps51LF1a';
         const apiKey2 = 'GRWCdsnp8Tg5sAGvJJCS5lTI6Cyieogh';
-        const locationKey = '340850'; // Replace with the location key of your desired location
+        const apiKey3 = 'uwmSyBMGzFZcfo6VG6p90Q8zHgtmc5Pt';
+        const locationKey = '340850';
         
         // URL for current weather
         const currentWeatherUrl = `https://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${apiKey1}&details=true`;
@@ -177,24 +195,25 @@
                 forecastDiv.innerHTML = '<h2>5-Day Forecast:</h2>';
                 dailyForecasts.forEach(forecast => {
                     const date = new Date(forecast.Date);
-                    const day = date.toLocaleDateString('en-US', { weekday: 'short' }); // Abbreviate day
-                    const forecastDate = date.toLocaleDateString('en-US'); // Format date as Month/Day/Year
+                    const day = date.toLocaleDateString('en-US', { weekday: 'short' });
+                    const forecastDate = date.toLocaleDateString('en-US');
                     const temperatureMin = forecast.Temperature.Minimum.Value;
                     const temperatureMax = forecast.Temperature.Maximum.Value;
                     const dayIcon = forecast.Day.Icon;
                     const nightIcon = forecast.Night.Icon;
-
+                    
                     forecastDiv.innerHTML += `
                         <div class="forecast-item">
-                            <div style="display: flex; align-items: center;">
+                            <div>
                                 <p class="day-text">${day}</p>
                                 <p class="forecast-date">${forecastDate}</p>
-                                <img class="forecast-icon" src="https://www.awxcdn.com/adc-assets/images/weathericons/${dayIcon}.svg" alt="Day">
-                                <div class="high-low-container">
-                                    <p><span class="high-temp">${temperatureMax}°F</span></p>
-                                    <p><span class="low-temp">${temperatureMin}°F</span></p>
-                                </div>
                             </div>
+                            <img class="forecast-icon" src="https://www.awxcdn.com/adc-assets/images/weathericons/${dayIcon}.svg" alt="Day">
+                            <div class="high-low-container">
+                                <p><span class="high-temp">${temperatureMax}°F</span></p>
+                                <p><span class="low-temp">${temperatureMin}°F</span></p>
+                            </div>
+                            <img class="forecast-icon night-icon" src="https://www.awxcdn.com/adc-assets/images/weathericons/${nightIcon}.svg" alt="Night">
                         </div>
                     `;
                 });
@@ -203,6 +222,7 @@
                 console.error('Error fetching forecast data:', error);
                 document.getElementById('forecast').innerHTML = '<p>Failed to fetch forecast data</p>';
             });
+       
     </script>
 </body>
 </html>
