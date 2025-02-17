@@ -1,0 +1,107 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    position: relative; /* Added position relative */
+}
+
+h1 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+}
+
+#weatherIcon {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#weatherIcon img {
+    width: 130px;
+    height: 78px;
+}
+
+#weather, #forecast, #sun-moon {
+    margin-bottom: 20px;
+    color: #555;
+    text-align: center;
+}
+
+.forecast-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f3f3f3;
+    display: flex;
+    align-items: center;
+}
+
+.forecast-item p {
+    margin: 0;
+}
+
+.forecast-item strong {
+    font-weight: bold;
+}
+
+.day-text {
+    width: 45px;
+    font-size: 14px;
+    color: black;
+    margin-right: 10px;
+}
+
+.forecast-icon {
+    width: 75px;
+    height: 45px;
+    margin-right: 10px;
+}
+
+.forecast-date {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.high-low-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align items to the start of the container */
+}
+
+.high-temp {
+    font-weight: bold;
+    font-size: 25px;
+    margin-bottom: 5px; /* Add margin between high temperature and low temperature */
+    line-height: 25px;
+}
+
+.low-temp {
+    font-size: 15px;
+}
+
+.night-icon {
+    width: 55px; /* Adjusted width */
+    height: 25px; /* Adjusted height */
+    margin-right: 10px;
+    margin-top: auto; /* Align to the bottom */
+}
+
+.logo {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 100px; /* Adjusted width */
+    height: auto; /* Auto height to maintain aspect ratio */
+}
