@@ -104,8 +104,8 @@
         <div id="weatherIcon"></div>
         <div id="weather"></div>
         <div id="forecast"></div>
-        <div id="sun-moon"></div>
-        <img class="logo" src="https://raw.githubusercontent.com/JayceDeAtley/weather/489beccf1e51b20481a76af7cf0c596be254e409/AW_RGB_Small_R.svg" alt="Logo">
+        <a href="https://www.accuweather.com/en/us/hico/76457/weather-forecast/340850" target="_blank">
+    <img class="logo" src="https://raw.githubusercontent.com/JayceDeAtley/weather/489beccf1e51b20481a76af7cf0c596be254e409/AW_RGB_Small_R.svg" alt="Logo"></a>    
     </div>
 
     <script>
@@ -118,7 +118,7 @@
         const currentWeatherUrl = `https://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${apiKey1}&details=true`;
         
         // URL for forecast
-        const forecastUrl = `https://dataservice.accuweather.com/forecasts/v1/daily/5day/${locationKey}?apikey=${apiKey1}&details=true&metric=false`;
+        const forecastUrl = `https://dataservice.accuweather.com/forecasts/v1/daily/5day/${locationKey}?apikey=${apiKey3}&details=true&metric=false`;
 
         fetch(currentWeatherUrl)
             .then(response => {
