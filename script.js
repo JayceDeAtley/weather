@@ -25,7 +25,7 @@ fetch(currentWeatherUrl)
         const windChillTemperature = weatherData.WindChillTemperature.Imperial.Value;
         const weatherIcon = weatherData.WeatherIcon;
 
-        document.getElementById('weatherIcon').innerHTML = `<img src="https://www.awxcdn.com/adc-assets/images/weathericons/${weatherIcon}.svg" alt="Weather Icon">`;
+        document.getElementById('weatherIcon').innerHTML = `<img src="img/${weatherIcon}.svg" alt="Weather Icon">`;
 
         document.getElementById('weather').innerHTML = `
             <h3 style="color: black;">${weatherText}</h3>
@@ -54,7 +54,7 @@ fetch(currentWeatherUrl)
                 const windChillTemperature = weatherData.WindChillTemperature.Imperial.Value;
                 const weatherIcon = weatherData.WeatherIcon;
 
-                document.getElementById('weatherIcon').innerHTML = `<img src="https://www.awxcdn.com/adc-assets/images/weathericons/${weatherIcon}.svg" alt="Weather Icon">`;
+                document.getElementById('weatherIcon').innerHTML = `<img src="img/${weatherIcon}.svg" alt="Weather Icon">`;
 
                 document.getElementById('weather').innerHTML = `
                     <h3 style="color: black;">${weatherText}</h3>
@@ -90,6 +90,8 @@ fetch(forecastUrl)
             const temperatureMax = forecast.Temperature.Maximum.Value;
             const dayIcon = forecast.Day.Icon;
             const nightIcon = forecast.Night.Icon;
+            const daySummary = forecast.Day.ShortPhrase;
+            const nightSummary = forecast.Night.ShortPhrase;
 
             forecastDiv.innerHTML += `
                 <div class="forecast-item">
@@ -97,12 +99,18 @@ fetch(forecastUrl)
                         <p class="day-text">${day}</p>
                         <p class="forecast-date">${forecastDate}</p>
                     </div>
-                    <img class="forecast-icon" src="https://www.awxcdn.com/adc-assets/images/weathericons/${dayIcon}.svg" alt="Day">
+                    <img class="forecast-icon" src="img/${dayIcon}.svg" alt="Day">
                     <div class="high-low-container">
                         <p><span class="high-temp">${temperatureMax}°F</span></p>
                         <p><span class="low-temp">${temperatureMin}°F</span></p>
                     </div>
-                    <img class="forecast-icon night-icon" src="https://www.awxcdn.com/adc-assets/images/weathericons/${nightIcon}.svg" alt="Night">
+                    <div class="summary-container">
+                        <p class="day-summary">${daySummary}</p>
+                        <div class="night-summary">
+                            <img class="night-icon" src="img/${nightIcon}.svg" alt="Night">
+                            <p>${nightSummary}</p>
+                        </div>
+                    </div>
                 </div>
             `;
         });
