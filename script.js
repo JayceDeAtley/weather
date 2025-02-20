@@ -92,6 +92,8 @@ fetch(forecastUrl)
             const nightIcon = forecast.Night.Icon;
             const daySummary = forecast.Day.ShortPhrase;
             const nightSummary = forecast.Night.ShortPhrase;
+            const precipitationDay = forecast.Day.PrecipitationProbability;
+            const precipitationNight = forecast.Night.PrecipitationProbability;
 
             forecastDiv.innerHTML += `
                 <div class="forecast-item">
@@ -110,6 +112,10 @@ fetch(forecastUrl)
                             <img class="night-icon" src="https://www.awxcdn.com/adc-assets/images/weathericons/${nightIcon}.svg" alt="Night">
                             <p>${nightSummary}</p>
                         </div>
+                    </div>
+                    <div class="precipitation">
+                        <img src="https://raw.githubusercontent.com/JayceDeAtley/weather/61ba6e6c0c8c3b729e67d04047250f1b0f1317f1/img/precip-icon.svg" alt="Precipitation">
+                        <span>${precipitationDay}%</span>
                     </div>
                 </div>
             `;
