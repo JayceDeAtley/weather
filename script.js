@@ -125,3 +125,64 @@ fetch(forecastUrl)
         console.error('Error fetching forecast data:', error);
         document.getElementById('forecast').innerHTML = '<p>Failed to fetch forecast data</p>';
     });
+
+// Initialize the map and add OpenWeatherMap layers
+const apiKey = '4d27ff267559567f0b5c03e63db6cbdd'; // Your OpenWeatherMap API key
+
+// Initialize the map
+const map = L.map('map').setView([31.0, -99.0], 6); // Center on Texas, zoom level 6
+
+// Add the base map layer (similar to OpenWeatherMap's style)
+L.tileLayer(
+    `https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`,
+    {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 18,
+    }
+).addTo(map);
+
+// Add OpenWeatherMap precipitation layer (with styling closer to their website)
+const precipitationLayer = L.tileLayer(
+    `https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${apiKey}`,
+    {
+        attribution: '© OpenWeatherMap',
+        opacity: 0.7, // Adjust opacity as needed
+    }
+).addTo(map);
+
+// Add OpenWeatherMap clouds layer (optional, for more detail)
+const cloudsLayer = L.tileLayer(
+    `https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${apiKey}`,
+    {
+        attribution: '© OpenWeatherMap',
+        opacity: 0.5, // Adjust opacity as needed
+    }
+).addTo(map);
+
+// Add OpenWeatherMap temperature layer (optional, for more detail)
+const temperatureLayer = L.tileLayer(
+    `https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${apiKey}`,
+    {
+        attribution: '© OpenWeatherMap',
+        opacity: 0.5, // Adjust opacity as needed
+    }
+).addTo(map);
+
+// Add layer control to toggle layers
+const baseMaps = {
+    "Base Map": L.tileLayer(
+        `https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`,
+        {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 18,
+        }
+    ),
+};
+
+const overlayMaps = {
+    "Precipitation": precipitationLayer,
+    "Clouds": cloudsLayer,
+    "Temperature": temperatureLayer,
+};
+
+L.control.layers(baseMaps, overlayMaps).addTo(map);

@@ -5,17 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hico TX Weather</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
-    <div class="container">
-        <h1>Hico TX Weather</h1>
-        <div id="weatherIcon"></div>
-        <div id="weather"></div>
-        <div id="forecast"></div>
-        <a href="https://www.accuweather.com/en/us/hico/76457/weather-forecast/340850" target="_blank">
-            <img class="logo" src="https://raw.githubusercontent.com/JayceDeAtley/weather/489beccf1e51b20481a76af7cf0c596be254e409/AW_RGB_Small_R.svg" alt="Logo">
-        </a>
+    <div class="main-container">
+        <div class="weather-containers">
+            <div class="current-weather-container">
+                <h1>Hico TX Weather</h1>
+                <div id="weatherIcon"></div>
+                <div id="weather"></div>
+            </div>
+
+            <div class="forecast-container">
+                <div id="forecast"></div>
+            </div>
+        </div>
+
+        <div class="map-container">
+            <h2>Weather Radar</h2>
+            <div id="map" style="height: 415px; border-radius: 10px;"></div>
+        </div>
     </div>
+
+    <a href="https://www.accuweather.com/en/us/hico/76457/weather-forecast/340850" target="_blank">
+        <img class="logo" src="https://raw.githubusercontent.com/JayceDeAtley/weather/489beccf1e51b20481a76af7cf0c596be254e409/AW_RGB_Small_R.svg" alt="Logo">
+    </a>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

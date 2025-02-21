@@ -3,19 +3,63 @@ body {
     background-color: #f7f7f7;
     margin: 0;
     padding: 0;
+    position: relative;
 }
 
-.container {
+/* Main container to hold weather containers and map */
+.main-container {
+    display: flex;
+    gap: 20px; /* Space between weather containers and map */
+    padding: 20px;
+}
+
+/* Container for the weather containers */
+.weather-containers {
+    flex: 1;
     max-width: 600px;
-    margin: 20px auto;
+}
+
+.current-weather-container {
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    position: relative; /* Added position relative */
+    margin-bottom: 20px;
 }
 
-h1 {
+.forecast-container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.map-container {
+    flex: 1;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px 20px; /* Reduced top padding to push text up */
+    max-width: 800px; /* Adjust as needed */
+    height: 480px; /* Keep the container height the same */
+}
+
+.map-container h2 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 10px; /* Reduced margin to push text up */
+    margin-top: 7px;
+    color: #333;
+    text-align: center;
+}
+
+#map {
+    width: 100%;
+    height: 375px; /* Increased map height (was 355px) */
+    border-radius: 10px;
+}
+
+h1, h2 {
     font-size: 28px;
     font-weight: bold;
     margin-bottom: 20px;
@@ -77,13 +121,13 @@ h1 {
 .high-low-container {
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Align items to the start of the container */
+    align-items: flex-start;
 }
 
 .high-temp {
     font-weight: bold;
     font-size: 25px;
-    margin-bottom: 5px; /* Add margin between high temperature and low temperature */
+    margin-bottom: 5px;
     line-height: 25px;
     color: rgb(255, 32, 32);
 }
@@ -94,19 +138,18 @@ h1 {
 }
 
 .night-icon {
-    width: 55px; /* Adjusted width */
-    height: 25px; /* Adjusted height */
-    margin-right: -10px; /* Reduced margin to bring text closer */    
-    margin-top: auto; /* Align to the bottom */
+    width: 55px;
+    height: 25px;
+    margin-right: -10px;
+    margin-top: auto;
 }
 
-/* New styles for summaries */
 .summary-container {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     margin-left: 10px;
-    flex: 1; /* Allow summary container to grow and take available space */
+    flex: 1;
 }
 
 .day-summary {
@@ -114,8 +157,8 @@ h1 {
     color: #333;
     margin-bottom: 5px;
     line-height: 1.2;
-    padding-left: 55px; /* Align first letter with night icon */
-    text-indent: -40px; /* Offset the first letter to align with night icon */
+    padding-left: 55px;
+    text-indent: -40px;
 }
 
 .night-summary {
@@ -124,15 +167,14 @@ h1 {
     line-height: 1.2;
     display: flex;
     align-items: center;
-    height: 25px; /* Match night icon height */
+    height: 25px;
 }
 
-/* Precipitation styles */
 .precipitation {
     display: flex;
     align-items: center;
-    gap: 5px; /* Space between icon and text */
-    margin-left: auto; /* Push precipitation to the right */
+    gap: 5px;
+    margin-left: auto;
 }
 
 .precipitation img {
@@ -145,10 +187,12 @@ h1 {
     color: #555;
 }
 
+/* Logo styles */
 .logo {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    width: 100px; /* Adjusted width */
-    height: auto; /* Auto height to maintain aspect ratio */
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 100px;
+    height: auto;
+    z-index: 1000;
 }
