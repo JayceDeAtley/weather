@@ -6,9 +6,13 @@ const locationKey = '340850';
 // URL for current weather
 const currentWeatherUrl = `https://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${apiKey1}&details=true`;
 
-// URL for forecast
+// URL for 5-day forecast
 const forecastUrl = `https://dataservice.accuweather.com/forecasts/v1/daily/5day/${locationKey}?apikey=${apiKey3}&details=true&metric=false`;
 
+// URL for hourly forecast (12-hour)
+const hourlyForecastUrl = `https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${locationKey}?apikey=${apiKey1}&details=true&metric=false`;
+
+// Fetch current weather data
 fetch(currentWeatherUrl)
     .then(response => {
         if (!response.ok) {
@@ -70,7 +74,7 @@ fetch(currentWeatherUrl)
             });
     });
 
-// Fetch forecast data
+// Fetch 5-day forecast data
 fetch(forecastUrl)
     .then(response => {
         if (!response.ok) {
@@ -126,63 +130,74 @@ fetch(forecastUrl)
         document.getElementById('forecast').innerHTML = '<p>Failed to fetch forecast data</p>';
     });
 
-// Initialize the map and add OpenWeatherMap layers
-const apiKey = '4d27ff267559567f0b5c03e63db6cbdd'; // Your OpenWeatherMap API key
+// Fetch hourly forecast data
+fetch(hourlyForecastUrl)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to fetch data');
+        }
+        return response.json();
+    })
+    .then(data => {
+        const hourlyForecastDiv = document.getElementById('hourlyForecast');
+        hourlyForecastDiv.innerHTML = ''; // Clear existing content
 
-// Initialize the map
+        data.forEach(hour => {
+            const date = new Date(hour.DateTime);
+            const time = date.toLocaleTimeString('en-US', { hour: 'numeric', hour12: true });
+            const temperature = hour.Temperature.Value;
+            const weatherIcon = hour.WeatherIcon;
+            const precipitation = hour.PrecipitationProbability;
+
+            const hourlyItem = document.createElement('div');
+            hourlyItem.className = 'hourly-item';
+
+            hourlyItem.innerHTML = `
+                <div class="time">${time}</div>
+                <img class="weather-icon" src="https://www.awxcdn.com/adc-assets/images/weathericons/${weatherIcon}.svg" alt="Weather Icon">
+                <div class="temperature">${temperature}°F</div>
+                <div class="precipitation">
+                    <img src="https://raw.githubusercontent.com/JayceDeAtley/weather/61ba6e6c0c8c3b729e67d04047250f1b0f1317f1/img/precip-icon.svg" alt="Precipitation">
+                    <span>${precipitation}%</span>
+                </div>
+            `;
+
+            hourlyForecastDiv.appendChild(hourlyItem);
+        });
+    })
+    .catch(error => {
+        console.error('Error fetching hourly forecast data:', error);
+        document.getElementById('hourlyForecast').innerHTML = '<p>Failed to fetch hourly forecast data</p>';
+    });
+
+// Initialize the map and add NOAA/NWS layers
 const map = L.map('map').setView([31.0, -99.0], 6); // Center on Texas, zoom level 6
 
-// Add the base map layer (similar to OpenWeatherMap's style)
-L.tileLayer(
+// Add the base map layer (OpenStreetMap)
+const openStreetMapLayer = L.tileLayer(
     `https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`,
     {
-        attribution: '© OpenStreetMap contributors',
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         maxZoom: 18,
     }
 ).addTo(map);
 
-// Add OpenWeatherMap precipitation layer (with styling closer to their website)
-const precipitationLayer = L.tileLayer(
-    `https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${apiKey}`,
+// Add NOAA/NWS radar layer
+const noaaRadarLayer = L.tileLayer(
+    `https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/{z}/{x}/{y}.png`,
     {
-        attribution: '© OpenWeatherMap',
+        attribution: 'Radar data &copy; <a href="https://www.noaa.gov/">NOAA</a> & <a href="https://www.weather.gov/">NWS</a>',
         opacity: 0.7, // Adjust opacity as needed
-    }
-).addTo(map);
-
-// Add OpenWeatherMap clouds layer (optional, for more detail)
-const cloudsLayer = L.tileLayer(
-    `https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${apiKey}`,
-    {
-        attribution: '© OpenWeatherMap',
-        opacity: 0.5, // Adjust opacity as needed
-    }
-).addTo(map);
-
-// Add OpenWeatherMap temperature layer (optional, for more detail)
-const temperatureLayer = L.tileLayer(
-    `https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${apiKey}`,
-    {
-        attribution: '© OpenWeatherMap',
-        opacity: 0.5, // Adjust opacity as needed
     }
 ).addTo(map);
 
 // Add layer control to toggle layers
 const baseMaps = {
-    "Base Map": L.tileLayer(
-        `https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`,
-        {
-            attribution: '© OpenStreetMap contributors',
-            maxZoom: 18,
-        }
-    ),
+    "OpenStreetMap": openStreetMapLayer,
 };
 
 const overlayMaps = {
-    "Precipitation": precipitationLayer,
-    "Clouds": cloudsLayer,
-    "Temperature": temperatureLayer,
+    "NOAA/NWS Radar": noaaRadarLayer,
 };
 
 L.control.layers(baseMaps, overlayMaps).addTo(map);
