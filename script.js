@@ -129,8 +129,31 @@ fetch(forecastUrl)
         console.error('Error fetching forecast data:', error);
         document.getElementById('forecast').innerHTML = '<p>Failed to fetch forecast data</p>';
     });
+    
+            async function fetchWeatherAlert() {
+                try {
+                    const response = await fetch('https://api.weather.gov/alerts/active?zone=TXZ143'); // Replace with the appropriate endpoint
+                    const data = await response.json();
+                    const alerts = data.features;
+            
+                    if (alerts.length > 0) {
+                        const alert = alerts[0]; // Get the first alert
+                        const alertText = `${alert.properties.event} until ${new Date(alert.properties.ends).toLocaleString()}`;
+                        document.querySelector('.alert-text').textContent = alertText;
+                        document.querySelector('.alert-container').style.display = 'flex';
+                    } else {
+                        document.querySelector('.alert-container').style.display = 'none';
+                    }
+                } catch (error) {
+                    console.error('Error fetching weather alert:', error);
+                }
+            }
+            
+            // Call the function to fetch and display the alert
+            fetchWeatherAlert();
+             
 
-// Fetch hourly forecast data
+    // Fetch hourly forecast data
 fetch(hourlyForecastUrl)
     .then(response => {
         if (!response.ok) {
