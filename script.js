@@ -85,7 +85,7 @@ fetch(forecastUrl)
     .then(data => {
         const dailyForecasts = data.DailyForecasts;
         const forecastDiv = document.getElementById('forecast');
-        forecastDiv.innerHTML = '<h2>5-Day Forecast:</h2>';
+        forecastDiv.innerHTML = '<h2>5-Day Forecast</h2>';
         dailyForecasts.forEach(forecast => {
             const date = new Date(forecast.Date);
             const day = date.toLocaleDateString('en-US', { weekday: 'short' });
@@ -130,28 +130,38 @@ fetch(forecastUrl)
         document.getElementById('forecast').innerHTML = '<p>Failed to fetch forecast data</p>';
     });
     
-            async function fetchWeatherAlert() {
-                try {
-                    const response = await fetch('https://api.weather.gov/alerts/active?zone=TXZ143'); // Replace with the appropriate endpoint
-                    const data = await response.json();
-                    const alerts = data.features;
-            
-                    if (alerts.length > 0) {
-                        const alert = alerts[0]; // Get the first alert
-                        const alertText = `${alert.properties.event} until ${new Date(alert.properties.ends).toLocaleString()}`;
-                        document.querySelector('.alert-text').textContent = alertText;
-                        document.querySelector('.alert-container').style.display = 'flex';
-                    } else {
-                        document.querySelector('.alert-container').style.display = 'none';
-                    }
-                } catch (error) {
-                    console.error('Error fetching weather alert:', error);
+    document.addEventListener('DOMContentLoaded', function() {
+        const alertContainer = document.getElementById('alert-container');
+        const alertText = document.querySelector('#alert-container .alert-text');
+    
+        // Fetch alerts for Hamilton County (adjust the endpoint/zone as needed)
+        fetch('https://api.weather.gov/alerts/active?zone=TXZ143')
+            .then(response => response.json())
+            .then(data => {
+                // Check if active alerts exist
+                if (data.features && data.features.length > 0) {
+                    // For demonstration, take the first active alert
+                    const alertData = data.features[0].properties;
+                    const event = alertData.event;
+                    const endDate = new Date(alertData.ends).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                    alertText.textContent = `${event} until ${endDate}`;
+                    
+                    // Make the alert container visible
+                    alertContainer.style.display = 'flex';
+                } else {
+                    // No active alerts found; keep the container hidden
+                    alertContainer.style.display = 'none';
                 }
-            }
-            
-            // Call the function to fetch and display the alert
-            fetchWeatherAlert();
-             
+            })
+            .catch(error => {
+                console.error('Error fetching alerts:', error);
+                // Optionally hide the container on error
+                alertContainer.style.display = 'none';
+            });
+    });           
 
     // Fetch hourly forecast data
 fetch(hourlyForecastUrl)
@@ -204,6 +214,15 @@ const openStreetMapLayer = L.tileLayer(
         maxZoom: 18,
     }
 ).addTo(map);
+
+setTimeout(function () {
+    map.invalidateSize();
+}, 500); // Slight delay to allow proper rendering
+
+// Ensure the map resizes properly when the window is resized
+window.addEventListener('resize', function () {
+    map.invalidateSize();
+});
 
 // Add NOAA/NWS radar layer
 const noaaRadarLayer = L.tileLayer(

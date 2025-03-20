@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hico TX Weather: By Jayce DeAtley</title>
+    <title>Hico TX Weather</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
     <div class="main-container">
         <div class="weather-containers">
-            <div id="alert-container" class="alert-container">
-                <img src="alert.svg" alt="Alert Icon" class="alert-icon">
+            <div id="alert-container" class="alert-container" style="display: none;"> 
+                <img src="alert.svg" class="alert-icon">
                 <div class="alert-text" id="alert-text">No active alerts</div>
             </div>  
             <div class="current-weather-container">
@@ -31,7 +31,7 @@
 
             <!-- Hourly Forecast Container -->
             <div class="hourly-forecast-container">
-                <h2>Hourly Forecast:</h2>
+                <h2>Hourly Forecast</h2>
                 <div id="hourlyForecast" class="hourly-forecast-scrollable"></div>
             </div>
         </div>
