@@ -291,19 +291,11 @@ h1, h2 {
     height: 15px;
 }
 
-.image-container {
+.logo {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    display: flex;
-    flex-direction: row-reverse;
+    width: 100px;
+    height: auto;
     z-index: 1000;
-}
-.image-container a {
-    display: inline-block;
-    margin: 0 2.5px;
-}
-.image-container img {
-    width: 15px;
-    height: 15px;
 }

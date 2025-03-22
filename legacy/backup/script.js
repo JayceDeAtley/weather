@@ -1,4 +1,112 @@
 document.addEventListener('DOMContentLoaded', function() {
+  // --- Define full mappings for daytime conditions (AccuWeather-style) ---
+  const nwsToOriginalIconMappingDay = {
+    'Clear': '1',
+    'Mostly Clear': '2',
+    'Mostly Sunny': '2',
+    'Partly Cloudy': '3',
+    'Partly Sunny': '3',
+    'Mostly Cloudy': '6',
+    'Cloudy': '7',
+    'Overcast': '8',
+    'Fog': '11',
+    'Dense Fog': '11',
+    'Haze': '5',
+    'Smoke': '5',
+    'Drizzle': '12',
+    'Rain': '18',
+    'Heavy Rain': '18',
+    'Freezing Rain': '26',
+    'Sleet': '25',
+    'Snow': '22',
+    'Heavy Snow': '22',
+    'Blowing Snow': '22',
+    'Snow Showers': '22',
+    'Snow Flurries': '22',
+    'Thunderstorm': '15',
+    'Severe Thunderstorm': '15',
+    'Tornado': '15',
+    'Hurricane': '15',
+    'Tropical Storm': '15',
+    'Blizzard': '19',
+    'Ice Storm': '24',
+    'Windy': '32',
+    'Breezy': '32',
+    'Gusty Winds': '32',
+    'Calm': '2',
+    'Hot': '30',
+    'Cold': '31',
+    'Frost': '24',
+    'Freeze': '24',
+    'Dust Storm': '5',
+    'Sandstorm': '5',
+    'Hail': '25',
+    'Freezing Fog': '11',
+    'Patchy Fog': '11',
+    'Light Rain': '13',
+    'Light Snow': '20',
+    'Scattered Showers': '13',
+    'Isolated Thunderstorms': '16'
+  };
+
+  const nwsToOriginalIconMappingNight = {
+    'Clear': '33',
+    'Mostly Clear': '34',
+    'Partly Cloudy': '35',
+    'Mostly Cloudy': '38',
+    'Cloudy': '7',
+    'Overcast': '8',
+    'Fog': '11',
+    'Dense Fog': '11',
+    'Haze': '37',
+    'Smoke': '37',
+    'Drizzle': '39',
+    'Rain': '18',
+    'Heavy Rain': '18',
+    'Freezing Rain': '26',
+    'Sleet': '25',
+    'Snow': '22',
+    'Heavy Snow': '22',
+    'Blowing Snow': '22',
+    'Snow Showers': '22',
+    'Snow Flurries': '22',
+    'Thunderstorm': '15',
+    'Severe Thunderstorm': '15',
+    'Tornado': '32',
+    'Hurricane': '32',
+    'Tropical Storm': '15',
+    'Blizzard': '22',
+    'Ice Storm': '24',
+    'Windy': '32',
+    'Breezy': '32',
+    'Gusty Winds': '32',
+    'Calm': '34',
+    'Hot': '30',
+    'Cold': '31',
+    'Frost': '24',
+    'Freeze': '24',
+    'Dust Storm': '37',
+    'Sandstorm': '37',
+    'Hail': '25',
+    'Freezing Fog': '11',
+    'Patchy Fog': '11',
+    'Light Rain': '39',
+    'Light Snow': '44',
+    'Scattered Showers': '40',
+    'Isolated Thunderstorms': '42'
+  };
+
+  // Function to return the original icon URL based on the short forecast and time of day.
+  const getOriginalIconUrl = (shortForecast, isDaytime = true) => {
+    const mapping = isDaytime ? nwsToOriginalIconMappingDay : nwsToOriginalIconMappingNight;
+    for (const key in mapping) {
+      if (shortForecast.includes(key)) {
+        return `https://www.awxcdn.com/adc-assets/images/weathericons/${mapping[key]}.svg`;
+      }
+    }
+    // Fallback if no mapping is found:
+    return `https://www.awxcdn.com/adc-assets/images/weathericons/${isDaytime ? '1' : '33'}.svg`;
+  };
 
   // Precipitation icon URL (using your original icon)
   const precipIconUrl = "https://raw.githubusercontent.com/JayceDeAtley/weather/61ba6e6c0c8c3b729e67d04047250f1b0f1317f1/img/precip-icon.svg";
@@ -42,25 +150,25 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(observationData => {
           const obs = observationData.properties;
-          // Temperature: convert Celsius to Fahrenheit and round.
+          // Temperature is given in Celsius; convert to Fahrenheit
           const temperatureC = obs.temperature.value;
-          const temperatureF = temperatureC !== null ? Math.round((temperatureC * 9/5) + 32) : 'N/A';
-          // Wind speed: convert m/s to mph and round.
+          const temperatureF = temperatureC !== null ? ((temperatureC * 9/5) + 32).toFixed(1) : 'N/A';
+          // Wind speed in m/s; convert to mph (1 m/s = 2.23694 mph)
           const windSpeedMs = obs.windSpeed.value;
-          const windSpeedMph = windSpeedMs !== null ? Math.round(windSpeedMs * 2.23694) : 'N/A';
-          // Humidity: round to nearest integer.
+          const windSpeedMph = windSpeedMs !== null ? (windSpeedMs * 2.23694).toFixed(1) : 'N/A';
+          // Relative humidity (as percentage)
           const humidity = obs.relativeHumidity && obs.relativeHumidity.value !== null 
-                           ? Math.round(obs.relativeHumidity.value) 
+                           ? obs.relativeHumidity.value.toFixed(0) 
                            : 'N/A';
-          // Visibility: convert meters to miles and round.
+          // Visibility is given in meters; convert to miles (1 meter = 0.000621371 miles)
           const visibilityMeters = obs.visibility && obs.visibility.value;
           const visibilityMiles = visibilityMeters !== null && visibilityMeters !== undefined 
-                                  ? Math.round(visibilityMeters * 0.000621371) 
+                                  ? (visibilityMeters * 0.000621371).toFixed(1) 
                                   : 'N/A';
           const description = obs.textDescription || 'No description';
           // For current conditions, assume daytime.
           const iconUrl = getOriginalIconUrl(description, true);
-        
+  
           document.getElementById('weatherIcon').innerHTML = iconUrl
             ? `<img src="${iconUrl}" alt="Weather Icon">`
             : '';
@@ -71,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <p>Wind Speed: ${windSpeedMph} mph</p>
             <p>Visibility: ${visibilityMiles} miles</p>
           `;
-        })        
+        })
         .catch(error => {
           console.error('Error fetching current observation data:', error);
           document.getElementById('weather').innerHTML = '<p>Failed to fetch current weather data</p>';
