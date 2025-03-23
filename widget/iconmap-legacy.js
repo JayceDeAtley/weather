@@ -99,9 +99,9 @@
     const mapping = isDaytime ? nwsToOriginalIconMappingDay : nwsToOriginalIconMappingNight;
     for (const key in mapping) {
       if (shortForecast.includes(key)) {
-        return `https://www.awxcdn.com/adc-assets/images/weathericons/${mapping[key]}.svg`;
+        return `https://developer.accuweather.com/sites/default/files/${mapping[key]}.png`;
       }
     }
     // Fallback if no mapping is found:
-    return `https://www.awxcdn.com/adc-assets/images/weathericons/${isDaytime ? '1' : '33'}.svg`;
+    return `https://developer.accuweather.com/sites/default/files/${isDaytime ? '1' : '33'}.png`;
   };
