@@ -1,0 +1,93 @@
+<div id="weather-widget" style="font-family: Arial, sans-serif; text-align: center; max-width: 300px; margin: auto;">
+    <div style="font-weight: bold; font-size: 18px;">Hico TX</div>
+    <div style="font-weight: lighter; font-size: 14px; margin-bottom: 10px;">Weather</div>
+    <div id="current-weather" style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+      <img id="current-icon" alt="Weather Icon" style="width: 47px; height: 47px;" />
+      <div style="margin-left: 10px; text-align: left;">
+        <div id="current-temp" style="font-size: 18px; font-weight: bold;"></div>
+        <div id="current-condition" style="font-size: 14px;"></div>
+      </div>
+    </div>
+    <div id="forecast" style="display: flex; justify-content: space-between;">
+      <!-- Forecast Columns will be inserted here -->
+    </div>
+  </div>
+  
+  <script>
+    // Coordinates for Hico, TX
+    const lat = 32.42;
+    const lon = -98.15;
+  
+    async function fetchWeatherData() {
+      try {
+        // Get NWS endpoints based on the coordinates
+        const pointsResponse = await fetch(`https://api.weather.gov/points/${lat},${lon}`);
+        const pointsData = await pointsResponse.json();
+        const forecastUrl = pointsData.properties.forecast;
+        const stationsUrl = pointsData.properties.observationStations;
+  
+        // Get current weather from the first available observation station
+        const stationsResponse = await fetch(stationsUrl);
+        const stationsData = await stationsResponse.json();
+        const firstStationId = stationsData.features[0].properties.stationIdentifier;
+        const currentObsUrl = `https://api.weather.gov/stations/${firstStationId}/observations/latest`;
+        const currentObservationResponse = await fetch(currentObsUrl);
+        const currentObservationData = await currentObservationResponse.json();
+        const tempC = currentObservationData.properties.temperature.value;
+        const currentTempF = tempC !== null ? (tempC * 9/5 + 32).toFixed(0) : 'N/A';
+        const currentCondition = currentObservationData.properties.textDescription;
+        const currentIcon = currentObservationData.properties.icon; // URL provided by NWS
+  
+        // Update current weather in the widget
+        document.getElementById('current-temp').textContent = `${currentTempF}°F`;
+        document.getElementById('current-condition').textContent = currentCondition;
+        document.getElementById('current-icon').src = currentIcon;
+  
+        // Fetch forecast data
+        const forecastResponse = await fetch(forecastUrl);
+        const forecastData = await forecastResponse.json();
+        const periods = forecastData.properties.periods;
+        
+        // Pair daytime periods with their subsequent nighttime period (if available)
+        const forecastDays = [];
+        for (let i = 0; i < periods.length; i++) {
+          if (periods[i].isDaytime) {
+            let dayPeriod = periods[i];
+            let lowTemp = null;
+            if (i + 1 < periods.length && !periods[i + 1].isDaytime) {
+              lowTemp = periods[i + 1].temperature;
+            }
+            forecastDays.push({ day: dayPeriod, low: lowTemp });
+          }
+          if (forecastDays.length === 5) break; // Only the first 5 days
+        }
+        
+        const forecastDiv = document.getElementById('forecast');
+        forecastDiv.innerHTML = ''; // Clear any existing forecast
+  
+        forecastDays.forEach(item => {
+          let day = item.day;
+          let low = item.low !== null ? item.low : 'N/A';
+          const date = new Date(day.startTime);
+          const options = { weekday: 'short' };
+          const dayName = new Intl.DateTimeFormat('en-US', options).format(date);
+          const high = day.temperature;
+          const forecastCol = document.createElement('div');
+          forecastCol.style.textAlign = 'center';
+          forecastCol.style.width = '20%';
+          forecastCol.innerHTML = `
+            <div style="font-size: 12px; font-weight: bold;">${dayName}</div>
+            <img src="${day.icon}" alt="Icon" style="width: 28px; height: 28px;" />
+            <div style="color: red; font-size: 12px;">${high}°F</div>
+            <div style="color: blue; font-size: 12px;">${low}°F</div>
+          `;
+          forecastDiv.appendChild(forecastCol);
+        });
+      } catch (error) {
+        console.error('Error fetching weather data:', error);
+      }
+    }
+  
+    fetchWeatherData();
+  </script>
+  
