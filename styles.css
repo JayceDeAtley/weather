@@ -37,6 +37,7 @@ body {
 
 /* Alert Container */
 .alert-container {
+    position: relative;
     display: flex;
     align-items: center;
     background-color: #CF0A0A;
@@ -65,6 +66,19 @@ body {
     font-size: 16px;
     font-weight: bold;
 }
+
+.alert-arrow {
+    position: absolute;
+    right: 20px;      /* Adjust as needed */
+    top: 50%;
+    transform: translateY(-30%);
+    text-decoration: none; /* Remove default link styling */
+  }
+  
+  .alert-arrow img {
+    width: 20px;  /* Adjust size as needed */
+    height: auto;
+  }
 
 /* Map Container */
 .map-container {

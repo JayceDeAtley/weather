@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   
     // --- MAP (NOAA Radar) ---
-    const map = L.map('map').setView([31.0, -99.0], 6);
+    const map = L.map('map').setView([38.0, -96.5], 4);
     const openStreetMapLayer = L.tileLayer(
       `https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`,
       {

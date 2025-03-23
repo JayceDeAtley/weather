@@ -71,7 +71,7 @@
 
 <script>
     async function fetchWeatherAlerts() {
-        const response = await fetch('https://api.weather.gov/alerts/active?area=TX');
+        const response = await fetch('https://api.weather.gov/alerts/active?zone=TXZ143');
         const data = await response.json();
         displayAlerts(data.features);
     }
