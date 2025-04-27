@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
                            ? Math.round(obs.relativeHumidity.value) 
                            : 'N/A';
           // Visibility: convert meters to miles and round.
-          const visibilityMeters = obs.visibility && obs.visibility.value;
+          const visibilityMeters = obs.visibility?.value ?? null;
           const visibilityMiles = visibilityMeters !== null && visibilityMeters !== undefined 
                                   ? Math.round(visibilityMeters * 0.000621371) 
                                   : 'N/A';
@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- ALERTS ---
     const alertContainer = document.getElementById('alert-container');
     const alertText = document.querySelector('#alert-container .alert-text');
-    fetch('https://api.weather.gov/alerts/active?zone=TXZ143')
+    fetch('https://api.weather.gov/alerts/active?zone=TXZ143')// ---TXZ143---
       .then(response => response.json())
       .then(data => {
         if (data.features && data.features.length > 0) {
