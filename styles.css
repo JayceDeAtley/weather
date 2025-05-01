@@ -125,6 +125,8 @@ h1, h2 {
 #weatherIcon img {
     width: 130px;
     height: 78px;
+    -webkit-filter: drop-shadow(2px 2px 4px rgba(83, 83, 83, 0.5));
+    filter: drop-shadow(2px 2px 4px rgba(83, 83, 83, 0.5));
 }
 
 #weather, #forecast, #sun-moon {
@@ -161,6 +163,8 @@ h1, h2 {
     width: 75px;
     height: 45px;
     margin-right: 10px;
+    -webkit-filter: drop-shadow(2px 2px 4px rgba(66, 66, 66, 0.5));
+    filter: drop-shadow(2px 2px 4px rgba(83, 83, 83, 0.5));;
 }
 
 .forecast-date {
@@ -192,6 +196,8 @@ h1, h2 {
     height: 25px;
     margin-right: -10px;
     margin-top: auto;
+    -webkit-filter: drop-shadow(2px 2px 4px rgba(66, 66, 66, 0.5));
+    filter: drop-shadow(2px 2px 4px rgba(83, 83, 83, 0.5));;
 }
 
 .summary-container {
@@ -282,6 +288,8 @@ h1, h2 {
     width: 75px;
     height: 45px;
     margin-bottom: 5px;
+    -webkit-filter: drop-shadow(2px 2px 4px rgba(66, 66, 66, 0.5));
+    filter: drop-shadow(2px 2px 4px rgba(83, 83, 83, 0.5));;
 }
 
 .hourly-item .temperature {
@@ -337,4 +345,45 @@ h1, h2 {
     .hourly-forecast-container {
       margin-left: -1.5;
     }
+
+    .day-summary {
+        font-size: 10px;
+        color: #202020;
+        margin-bottom: 5px;
+        line-height: 1.2;
+        padding-left: 55px;
+        text-indent: -40px;
+    }
+
+    .night-summary {
+        font-size: 10px;
+        color: #636363;
+    }
+    
+    .forecast-icon {
+        width: 72px;
+        height: 42px;
+        margin-right: 5px;
   }
+
+  .forecast-date {
+    font-size: 10px;
+    margin-top: 5px;
+}
+
+.high-temp {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.low-temp {
+    font-size: 12px;
+}
+
+.night-icon {
+    width: 54px;
+    height: 21px;
+    margin-top: auto;
+}
+
+}

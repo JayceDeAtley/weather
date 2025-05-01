@@ -1,25 +1,50 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-  // Precipitation icon URL (using your original icon)
-  const precipIconUrl = "https://raw.githubusercontent.com/JayceDeAtley/weather/61ba6e6c0c8c3b729e67d04047250f1b0f1317f1/img/precip-icon.svg";
-
-  // Coordinates for Hico, TX (approximate)
-  const lat = 31.064;
-  const lon = -98.424;
-
-  // Get grid and station info from the NWS API using the points endpoint
-  fetch(`https://api.weather.gov/points/${lat},${lon}`)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Failed to fetch points data');
-      }
-      return response.json();
-    })
+  // --- PARSE URL PARAMETERS FOR LAT & LON (DEFAULT TO HICO, TX) ---
+  const urlParams = new URLSearchParams(window.location.search);
+  const defaultLat =  31.984;
+  const defaultLon = -98.033;
+  const lat = parseFloat(urlParams.get('lat')) || defaultLat;
+  const lon = parseFloat(urlParams.get('lon')) || defaultLon;
+  
+  // --- REVERSE GEOCODE WITH OpenStreetMap NOMINATIM TO GET CITY NAME ---
+  fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&addressdetails=1`)  
+    .then(response => response.json())
     .then(data => {
-      const gridId = data.properties.gridId;
-      const gridX = data.properties.gridX;
-      const gridY = data.properties.gridY;
-      const observationStationsUrl = data.properties.observationStations;
+      const addr = data.address || {};
+      // Fallback through common place names
+      const city = addr.city || addr.town || addr.village || addr.county || '';
+      const state = addr.state || '';
+      if (city && state) {
+        const label = `${city}, ${state} Weather`;
+        document.querySelector('h1').innerText = label;
+        document.title = label;
+      } else if (city) {
+        // fallback to just city if no state was found
+        document.querySelector('h1').innerText = `${city} Weather`;
+        const label = `${city} Weather`;
+        document.querySelector('h1').innerText = label;
+        document.title = label;
+      }
+    })
+    .catch(err => console.warn('Reverse geocode failed:', err));
+  
+    // Precipitation icon URL (using your original icon)
+    const precipIconUrl = "https://raw.githubusercontent.com/JayceDeAtley/weather/61ba6e6c0c8c3b729e67d04047250f1b0f1317f1/img/precip-icon.svg";
+  
+    // Get grid and station info from the NWS API using the points endpoint
+    fetch(`https://api.weather.gov/points/${lat},${lon}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch points data');
+        }
+        return response.json();
+      })
+      .then(data => {
+        const gridId = data.properties.gridId;
+        const gridX = data.properties.gridX;
+        const gridY = data.properties.gridY;
+        const observationStationsUrl = data.properties.observationStations;
 
       // --- CURRENT CONDITIONS ---
       // Get list of observation stations and then fetch the latest observation from the first station.
@@ -240,6 +265,8 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     ).addTo(map);
   
+    const marker = L.marker([lat, lon]).addTo(map);
+
     const baseMaps = {
       "OpenStreetMap": openStreetMapLayer,
     };
@@ -250,3 +277,4 @@ document.addEventListener('DOMContentLoaded', function() {
   
     L.control.layers(baseMaps, overlayMaps).addTo(map);
 });
+
